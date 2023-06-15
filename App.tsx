@@ -1,16 +1,13 @@
-import React from 'react';
-import {SafeAreaView, Text, View} from 'react-native';
+import * as React from 'react'
+import {NavigationContainer} from '@react-navigation/native'
+import {RootNavigator} from './src/rootNavigator'
 
-function App(): Element {
+function App() {
   return (
-    <SafeAreaView>
-      {/*// @ts-ignore*/}
-      <View>
-        <Text>Test</Text>
-        {/*// @ts-ignore*/}
-      </View>
-    </SafeAreaView>
-  );
+    <NavigationContainer>
+      <RootNavigator />
+    </NavigationContainer>
+  )
 }
 
-export default App;
+export default App
