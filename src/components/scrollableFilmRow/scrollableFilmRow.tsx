@@ -20,7 +20,7 @@ export const ScrollableFilmRow = () => {
   useAnimatedReaction(
     () => scroll.value,
     value => {
-      scrollTo(aref, value, 0, false)
+      scrollTo(aref, value, 0, true)
     },
   )
 
@@ -29,13 +29,13 @@ export const ScrollableFilmRow = () => {
       'worklet'
 
       if (prevIndex.value === 0 && index === 1) {
-        scroll.value = withTiming(CARD_SIZE / 1.5, {duration: 100})
+        scroll.value = withTiming(CARD_SIZE / 1.5, {duration: 200})
         prevIndex.value = index
 
         return
       }
       scroll.value = withTiming((index - 0.6) * CARD_SIZE, {
-        duration: 100,
+        duration: 200,
       })
 
       prevIndex.value = index
