@@ -11,16 +11,7 @@
       // This needs to be mirrored in babel.config.js
       "theme": [
         "src/theme"
-      ]
+      ],
     },
-    "no-unused-vars": "off",
-    "@typescript-eslint/no-unused-vars": [
-      "error", // or "error"
-      {
-        "argsIgnorePattern": "^_",
-        "varsIgnorePattern": "^_",
-        "caughtErrorsIgnorePattern": "^_"
-      }
-    ]
   }
 }

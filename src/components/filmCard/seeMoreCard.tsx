@@ -14,12 +14,17 @@ const _SeeMoreCard: React.FC<Props> = ({onPress, onFocus, onBlur, focused}) => {
   const ref = useRef<any>()
 
   useFocusEffect(() => {
-    console.log('focused from focus effect', focused)
+    let timeout: number | null = null
     if (focused) {
-      setTimeout(
+      timeout = setTimeout(
         () => ref.current.setNativeProps({hasTVPreferredFocus: true}),
         5,
       )
+    }
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout)
+      }
     }
   })
 
