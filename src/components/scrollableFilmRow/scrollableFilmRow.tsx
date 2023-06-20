@@ -1,5 +1,7 @@
-import React, {useCallback} from 'react'
+import React, {FC, useCallback} from 'react'
 import Animated, {
+  runOnJS,
+  runOnUI,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
@@ -7,15 +9,25 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated'
 import {FilmCard} from '../filmCard/filmCard'
+import {TVFocusGuideView} from 'react-native'
+import {Film} from '../../items'
 
 const CARD_SIZE = 200
 
-const items = new Array(50).map((_, index) => index)
+const getItemLayout = (
+  _: number,
+  index: number,
+): {length: number; offset: number; index: number} => {
+  return {length: CARD_SIZE, offset: CARD_SIZE * index, index}
+}
 
-export const ScrollableFilmRow = () => {
+type Props = {isFirst?: boolean; items: Film[]}
+
+export const ScrollableFilmRow: FC<Props> = ({isFirst = false, items}) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
   const aref = useAnimatedRef<any>()
+  const [isFistActive, setIsFirstActive] = React.useState(true)
 
   useAnimatedReaction(
     () => scroll.value,
@@ -26,11 +38,10 @@ export const ScrollableFilmRow = () => {
 
   const onItemFocus = useCallback(
     (index: number) => {
-      'worklet'
-
       if (prevIndex.value === 0 && index === 1) {
         scroll.value = withTiming(CARD_SIZE / 1.5, {duration: 200})
         prevIndex.value = index
+        setIsFirstActive(false)
 
         return
       }
@@ -39,23 +50,45 @@ export const ScrollableFilmRow = () => {
       })
 
       prevIndex.value = index
+      if (index === 0) {
+        setIsFirstActive(true)
+      }
     },
     [prevIndex, scroll],
   )
 
-  const renderItem = ({index}: any) => {
-    return (
-      <FilmCard title={`Film ${index}`} onFocus={() => onItemFocus(index)} />
-    )
-  }
+  const renderItem = useCallback(
+    ({index}: any) => {
+      return (
+        <FilmCard
+          uri={items[index].url}
+          title={`${items[index].title}`}
+          onFocus={() => onItemFocus(index)}
+          requireFocus={index === 0 && isFirst}
+        />
+      )
+    },
+    [isFirst, items, onItemFocus],
+  )
 
   return (
-    <Animated.FlatList
-      ref={aref}
-      renderItem={renderItem}
-      data={items}
-      horizontal
-      scrollEnabled={false}
-    />
+    <TVFocusGuideView
+      hasTVPreferredFocus={isFirst}
+      trapFocusUp={isFirst}
+      trapFocusLeft={!isFistActive}
+      trapFocusRight={true}
+      autoFocus={true}>
+      <Animated.FlatList
+        initialNumToRender={7}
+        ref={aref}
+        renderItem={renderItem}
+        data={items}
+        horizontal
+        scrollEnabled={false}
+        keyExtractor={(_, index) => index.toString()}
+      />
+    </TVFocusGuideView>
   )
 }
+
+ScrollableFilmRow.whyDidYouRender = true
