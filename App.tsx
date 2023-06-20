@@ -13,26 +13,6 @@ function App() {
           flex: 1,
           flexDirection: 'row',
         }}>
-        <RawView
-          style={{
-            width: 40,
-            height: '100%',
-            backgroundColor: 'white',
-            alignItems: 'center',
-            justifyContent: 'flex-start',
-            gap: 10,
-            paddingTop: 20,
-          }}>
-          <TouchableOpacity>
-            <Icon name="rocket" size={30} color="#900" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="home" size={30} color="#900" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Icon name="star" size={30} color="#900" />
-          </TouchableOpacity>
-        </RawView>
         <RootNavigator />
       </BaseView>
     </NavigationContainer>

@@ -6,27 +6,37 @@ import {RootStackParamList} from '../../rootNavigator'
 import {films} from '../../items'
 import {AllFilms} from '../../components'
 import {FC} from 'react'
-import {BaseView} from 'theme'
+import {BaseView, RawView} from 'theme'
+import Icon from 'react-native-vector-icons/FontAwesome'
 
-const data = new Array(100).fill(0).map((_, i) => i)
-const RenderItem: FC<{i: number}> = ({i}) => {
-  console.log('RENDERED', i)
-  return (
-    <TouchableOpacity>
-      <Text
-        style={{
-          fontSize: 20,
-          padding: 10,
-        }}>
-        THIS IS ITEM{i}
-      </Text>
-    </TouchableOpacity>
-  )
-}
-type HomeScreenNavProp = NativeStackNavigationProp<RootStackParamList, 'Home'>
 export const HomeScreen = () => {
   return (
-    <BaseView backgroundColor={'white'}>
+    <BaseView
+      backgroundColor={'white'}
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+      }}>
+      <RawView
+        style={{
+          width: 40,
+          height: '100%',
+          backgroundColor: 'white',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          gap: 10,
+          paddingTop: 20,
+        }}>
+        <TouchableOpacity>
+          <Icon name="rocket" size={30} color="#900" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="home" size={30} color="#900" />
+        </TouchableOpacity>
+        <TouchableOpacity>
+          <Icon name="star" size={30} color="#900" />
+        </TouchableOpacity>
+      </RawView>
       <ScrollView>
         <Text
           style={{

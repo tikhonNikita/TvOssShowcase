@@ -24,6 +24,8 @@ const getItemLayout: FlatList['props']['getItemLayout'] = (
 const renderItem: ListRenderItem<RenderItem> = ({item}) => {
   return (
     <FilmCardContainer
+      type={item.type}
+      onPress={item.onPress}
       uri={item.uri}
       title={item.title}
       onFocus={item.onFocus}
@@ -32,11 +34,10 @@ const renderItem: ListRenderItem<RenderItem> = ({item}) => {
   )
 }
 
-type Props = {items: Film[]}
-
 const keyExtractor = (item: RenderItem, index: number) =>
   `${item.title}-${index}`
 
+type Props = {items: Film[]}
 export const ScrollableFilmRow: FC<Props> = ({items}) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
