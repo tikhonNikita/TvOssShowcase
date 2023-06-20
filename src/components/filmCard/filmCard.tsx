@@ -50,13 +50,8 @@ const CardContainer = styled.Pressable<ContainerProps>(props => ({
   width: 200,
   height: 300,
   borderColor: props.focused ? 'red' : 'transparent',
-  borderWidth: 4,
+  borderWidth: 3,
 }))
-
-const Poster = styled(FastImage)({
-  width: 192,
-  height: 200,
-})
 
 const Title = styled.Text({
   fontSize: 20,
@@ -67,5 +62,5 @@ const Title = styled.Text({
 })
 
 const ContentContainer = styled(BaseView)({
-  backgroundColor: 'white',
+  backgroundColor: 'lightgrey',
 })
