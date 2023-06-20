@@ -1,31 +1,39 @@
-import React, {FC, useEffect} from 'react'
+import React, {FC} from 'react'
 import {BaseView} from 'theme'
 import styled from 'styled-components/native'
+import FastImage from 'react-native-fast-image'
 
 type Props = {
   title: string
+  focused: boolean
   uri: string
   onFocus: () => void
+  onBlur: () => void
   requireFocus: boolean
 }
-const _FilmCard: FC<Props> = ({title, onFocus, requireFocus, uri}) => {
-  const [focused, setFocused] = React.useState(false)
-  const handleFocus = () => {
-    onFocus()
-    setFocused(true)
-  }
 
+const _FilmCard: FC<Props> = ({
+  title,
+  onFocus,
+  onBlur,
+  requireFocus,
+  uri,
+  focused,
+}) => {
   return (
     <CardContainer
-      onFocus={handleFocus}
-      onBlur={() => setFocused(false)}
+      onFocus={onFocus}
+      onBlur={onBlur}
       hasTVPreferredFocus={requireFocus}
       focused={focused}>
       <ContentContainer>
-        <Poster
+        <FastImage
+          style={{width: 192, height: 200}}
           source={{
-            uri,
+            uri: uri,
+            priority: FastImage.priority.normal,
           }}
+          resizeMode={FastImage.resizeMode.contain}
         />
         <Title> {title} </Title>
       </ContentContainer>
@@ -33,23 +41,19 @@ const _FilmCard: FC<Props> = ({title, onFocus, requireFocus, uri}) => {
   )
 }
 
-export const FilmCard = React.memo(_FilmCard, (prev, next) => {
-  return prev.requireFocus === next.requireFocus, prev.title === next.title
-})
+export const FilmCard = React.memo(_FilmCard)
 
-FilmCard.whyDidYouRender = true
-
-type ConainerProps = {
+type ContainerProps = {
   focused: boolean
 }
-const CardContainer = styled.Pressable<ConainerProps>(props => ({
+const CardContainer = styled.Pressable<ContainerProps>(props => ({
   width: 200,
   height: 300,
   borderColor: props.focused ? 'red' : 'transparent',
   borderWidth: 4,
 }))
 
-const Poster = styled.Image({
+const Poster = styled(FastImage)({
   width: 192,
   height: 200,
 })

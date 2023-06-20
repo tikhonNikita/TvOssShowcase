@@ -1,33 +1,46 @@
-import React, {FC, useCallback} from 'react'
+import React, {FC, useCallback, useContext} from 'react'
 import Animated, {
-  runOnJS,
-  runOnUI,
   scrollTo,
   useAnimatedReaction,
   useAnimatedRef,
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {FilmCard} from '../filmCard/filmCard'
-import {TVFocusGuideView} from 'react-native'
+import {FlatList, ListRenderItem} from 'react-native'
 import {Film} from '../../items'
+import {RenderItem, useRenderData} from './useRenderData'
+import {FocusManagementContext} from './focusHolder'
+import {FilmCardContainer} from '../filmCard/filmCardContainer'
 
 const CARD_SIZE = 200
 
-const getItemLayout = (
-  _: number,
+const getItemLayout: FlatList['props']['getItemLayout'] = (
+  _: unknown,
   index: number,
 ): {length: number; offset: number; index: number} => {
   return {length: CARD_SIZE, offset: CARD_SIZE * index, index}
 }
 
-type Props = {isFirst?: boolean; items: Film[]}
+const renderItem: ListRenderItem<RenderItem> = ({item}) => {
+  return (
+    <FilmCardContainer
+      uri={item.uri}
+      title={item.title}
+      onFocus={item.onFocus}
+      requireFocus={item.requireFocus}
+    />
+  )
+}
 
-export const ScrollableFilmRow: FC<Props> = ({isFirst = false, items}) => {
+type Props = {items: Film[]}
+
+const keyExtractor = (item: RenderItem, index: number) =>
+  `${item.title}-${index}`
+
+export const ScrollableFilmRow: FC<Props> = ({items}) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
   const aref = useAnimatedRef<any>()
-  const [isFistActive, setIsFirstActive] = React.useState(true)
 
   useAnimatedReaction(
     () => scroll.value,
@@ -41,7 +54,6 @@ export const ScrollableFilmRow: FC<Props> = ({isFirst = false, items}) => {
       if (prevIndex.value === 0 && index === 1) {
         scroll.value = withTiming(CARD_SIZE / 1.5, {duration: 200})
         prevIndex.value = index
-        setIsFirstActive(false)
 
         return
       }
@@ -50,44 +62,33 @@ export const ScrollableFilmRow: FC<Props> = ({isFirst = false, items}) => {
       })
 
       prevIndex.value = index
-      if (index === 0) {
-        setIsFirstActive(true)
-      }
     },
     [prevIndex, scroll],
   )
 
-  const renderItem = useCallback(
-    ({index}: any) => {
-      return (
-        <FilmCard
-          uri={items[index].url}
-          title={`${items[index].title}`}
-          onFocus={() => onItemFocus(index)}
-          requireFocus={index === 0 && isFirst}
-        />
-      )
-    },
-    [isFirst, items, onItemFocus],
-  )
+  const {isFirstOnScreen, setTrapLeft} = useContext(FocusManagementContext)
+
+  const data = useRenderData({
+    films: items,
+    onItemFocus,
+    isFirstOnScreen,
+    setTrapLeft,
+  })
 
   return (
-    <TVFocusGuideView
-      hasTVPreferredFocus={isFirst}
-      trapFocusUp={isFirst}
-      trapFocusLeft={!isFistActive}
-      trapFocusRight={true}
-      autoFocus={true}>
-      <Animated.FlatList
-        initialNumToRender={7}
-        ref={aref}
-        renderItem={renderItem}
-        data={items}
-        horizontal
-        scrollEnabled={false}
-        keyExtractor={(_, index) => index.toString()}
-      />
-    </TVFocusGuideView>
+    <Animated.FlatList
+      showsHorizontalScrollIndicator={false}
+      initialNumToRender={7}
+      maxToRenderPerBatch={7}
+      windowSize={2}
+      ref={aref}
+      renderItem={renderItem}
+      data={data}
+      horizontal
+      scrollEnabled={false}
+      getItemLayout={getItemLayout}
+      keyExtractor={keyExtractor}
+    />
   )
 }
 
