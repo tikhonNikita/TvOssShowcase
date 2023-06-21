@@ -1,15 +1,23 @@
-import {useNavigation} from '@react-navigation/native'
-import {FlatList, ScrollView, Text, TouchableOpacity, View} from 'react-native'
+import {ScrollView, Text, TouchableOpacity} from 'react-native'
 import * as React from 'react'
-import {NativeStackNavigationProp} from '@react-navigation/native-stack'
-import {RootStackParamList} from '../../rootNavigator'
 import {films} from '../../items'
 import {AllFilms} from '../../components'
-import {FC} from 'react'
 import {BaseView, RawView} from 'theme'
 import Icon from 'react-native-vector-icons/FontAwesome'
+import {MutableRefObject, useRef} from 'react'
+
+type ScrollContext = {
+  scrollRef: MutableRefObject<ScrollView | null> | null
+  activeIndex: MutableRefObject<number> | null
+}
+export const MainScrollContext = React.createContext<ScrollContext>({
+  scrollRef: null,
+  activeIndex: null,
+})
 
 export const HomeScreen = () => {
+  const scrollRef = useRef<ScrollView>(null)
+  const activeIndex = useRef(0)
   return (
     <BaseView
       backgroundColor={'white'}
@@ -37,37 +45,41 @@ export const HomeScreen = () => {
           <Icon name="star" size={30} color="#900" />
         </TouchableOpacity>
       </RawView>
-      <ScrollView>
-        <Text
-          style={{
-            padding: 20,
-            fontSize: 20,
-            color: 'black',
-          }}>
-          Home Screen
-        </Text>
-        <AllFilms films={films} key={'33sas'} isFirstOnScreen />
-        <Text
-          style={{
-            fontSize: 20,
-            padding: 20,
-            color: 'black',
-          }}>
-          Evening
-        </Text>
-        <AllFilms films={films} key={'33see'} />
-
-        <Text
-          style={{
-            fontSize: 20,
-            padding: 20,
-            color: 'black',
-          }}>
-          Night
-        </Text>
-        <AllFilms films={films} key={'12see'} />
-        {/*<ScrollableFilmRow key={2} />*/}
-        {/*<ScrollableFilmRow key={3} />*/}
+      <ScrollView ref={scrollRef} scrollEnabled={false}>
+        <MainScrollContext.Provider value={{scrollRef, activeIndex}}>
+          <Text
+            style={{
+              padding: 20,
+              fontSize: 20,
+              color: 'black',
+            }}>
+            Home Screen
+          </Text>
+          <AllFilms
+            films={films}
+            key={'33sas'}
+            isFirstOnScreen
+            scrollPosition={0}
+          />
+          <Text
+            style={{
+              fontSize: 20,
+              padding: 20,
+              color: 'black',
+            }}>
+            Evening
+          </Text>
+          <AllFilms films={films} key={'33see'} scrollPosition={1} />
+          <Text
+            style={{
+              fontSize: 20,
+              padding: 20,
+              color: 'black',
+            }}>
+            Night
+          </Text>
+          <AllFilms films={films} key={'12see'} scrollPosition={2} />
+        </MainScrollContext.Provider>
       </ScrollView>
     </BaseView>
   )

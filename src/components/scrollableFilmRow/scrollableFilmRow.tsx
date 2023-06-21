@@ -46,6 +46,7 @@ type Props = {
   maxToRenderPerBatch?: number
   windowSize?: number
   contentContainerStyle?: StyleProp<ViewStyle>
+  scrollPosition?: number
 }
 
 export const ScrollableFilmRow: FC<Props> = ({
@@ -56,6 +57,7 @@ export const ScrollableFilmRow: FC<Props> = ({
   maxToRenderPerBatch,
   windowSize,
   contentContainerStyle,
+  scrollPosition = 0,
 }) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
@@ -114,6 +116,7 @@ export const ScrollableFilmRow: FC<Props> = ({
     isFirstOnScreen,
     setTrapLeft,
     isHorizontal: horizontal,
+    scrollPosition,
   })
 
   return (
