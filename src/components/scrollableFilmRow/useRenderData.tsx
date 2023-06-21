@@ -49,7 +49,7 @@ export const useRenderData = ({
         setTrapLeft(false)
       }
     },
-    [onItemFocus, setTrapLeft],
+    [activeIndex, onItemFocus, scrollPosition, scrollRef, setTrapLeft],
   )
 
   const navigation = useNavigation<HomeScreenNavProp>()
