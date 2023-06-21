@@ -60,5 +60,5 @@ export const useRenderData = ({
         requireFocus: isFirstOnScreen && index === 0,
       }
     })
-  }, [films, handleItemFocus, isFirstOnScreen, onPress])
+  }, [films, handleItemFocus, isFirstOnScreen, isHorizontal, onPress])
 }
