@@ -3,6 +3,7 @@ import * as React from 'react'
 import {films} from '../../items'
 import {AllFilms} from '../../components'
 import {BaseView, RawView} from 'theme'
+import Animated from 'react-native-reanimated'
 import Icon from 'react-native-vector-icons/FontAwesome'
 import {MutableRefObject, useRef} from 'react'
 
@@ -16,7 +17,7 @@ export const MainScrollContext = React.createContext<ScrollContext>({
 })
 
 export const HomeScreen = () => {
-  const scrollRef = useRef<ScrollView>(null)
+  const scrollRef = useRef<any>(null)
   const activeIndex = useRef(0)
   return (
     <BaseView
@@ -45,7 +46,7 @@ export const HomeScreen = () => {
           <Icon name="star" size={30} color="#900" />
         </TouchableOpacity>
       </RawView>
-      <ScrollView ref={scrollRef} scrollEnabled={false}>
+      <Animated.ScrollView ref={scrollRef} scrollEnabled={false}>
         <MainScrollContext.Provider value={{scrollRef, activeIndex}}>
           <Text
             style={{
@@ -80,7 +81,7 @@ export const HomeScreen = () => {
           </Text>
           <AllFilms films={films} key={'12see'} scrollPosition={2} />
         </MainScrollContext.Provider>
-      </ScrollView>
+      </Animated.ScrollView>
     </BaseView>
   )
 }

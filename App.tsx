@@ -1,22 +1,24 @@
 import * as React from 'react'
 import {NavigationContainer} from '@react-navigation/native'
 import {RootNavigator} from './src/rootNavigator'
-import {BaseView, RawView} from 'theme'
-import Icon from 'react-native-vector-icons/FontAwesome'
-import {TouchableOpacity} from 'react-native'
+import {BaseView} from 'theme'
+import {StyleSheet} from 'react-native'
 
 function App() {
   return (
     <NavigationContainer>
-      <BaseView
-        style={{
-          flex: 1,
-          flexDirection: 'row',
-        }}>
+      <BaseView style={s.container}>
         <RootNavigator />
       </BaseView>
     </NavigationContainer>
   )
 }
+
+const s = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'row',
+  },
+})
 
 export default App

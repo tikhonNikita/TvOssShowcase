@@ -54,7 +54,7 @@ export const AllFilmsScrollGrid: FC<Props> = ({items, numColumns}) => {
   useAnimatedReaction(
     () => scroll.value,
     value => {
-      scrollTo(aref, 0, value, true)
+      scrollTo(aref, 0, value, false)
     },
   )
 
@@ -67,7 +67,7 @@ export const AllFilmsScrollGrid: FC<Props> = ({items, numColumns}) => {
       const firstInRow = rowNum * numColumns
       const finalIndex = firstInRow + 1
       scroll.value = withTiming((finalIndex / numColumns - 0.9) * CARD_HEIGHT, {
-        duration: 200,
+        duration: 0,
       })
 
       prevIndex.value = finalIndex

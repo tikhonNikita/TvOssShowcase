@@ -49,20 +49,20 @@ export const ScrollableFilmRow: FC<Props> = ({items, scrollPosition = 0}) => {
   useAnimatedReaction(
     () => scroll.value,
     value => {
-      scrollTo(aref, value, 0, true)
+      scrollTo(aref, value, 0, false)
     },
   )
 
   const onItemFocus = useCallback(
     (index: number) => {
       if (prevIndex.value === 0 && index === 1) {
-        scroll.value = withTiming(CARD_SIZE / 1.5, {duration: 200})
+        scroll.value = withTiming(CARD_SIZE / 1.5, {duration: 0})
         prevIndex.value = index
 
         return
       }
       scroll.value = withTiming((index - 0.6) * CARD_SIZE, {
-        duration: 200,
+        duration: 0,
       })
 
       prevIndex.value = index

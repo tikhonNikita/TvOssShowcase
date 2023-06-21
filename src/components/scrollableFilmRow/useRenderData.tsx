@@ -39,7 +39,7 @@ export const useRenderData = ({
         scrollRef?.current?.scrollTo({
           x: 0,
           y: scrollPosition * 320,
-          animated: true,
+          animated: false,
         })
       }
       onItemFocus(index)
