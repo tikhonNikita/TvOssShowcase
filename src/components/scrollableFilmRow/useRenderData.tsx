@@ -15,7 +15,6 @@ export type RenderItem = {
 }
 
 type RawData = {
-  isHorizontal: boolean
   films: Film[]
   onItemFocus: (index: number) => void
   isFirstOnScreen: boolean
@@ -29,7 +28,6 @@ export const useRenderData = ({
   onItemFocus,
   setTrapLeft,
   isFirstOnScreen,
-  isHorizontal,
   scrollPosition,
 }: RawData): RenderItem[] => {
   const {scrollRef, activeIndex} = useContext(MainScrollContext)
@@ -62,8 +60,7 @@ export const useRenderData = ({
 
   return useMemo(() => {
     return films.map((film, index) => {
-      const type =
-        index === films.length - 1 && isHorizontal ? 'seeMore' : 'film'
+      const type = index === films.length - 1 ? 'seeMore' : 'film'
       return {
         type,
         onPress: type === 'seeMore' ? onPress : () => {},
@@ -73,5 +70,5 @@ export const useRenderData = ({
         requireFocus: isFirstOnScreen && index === 0,
       }
     })
-  }, [films, handleItemFocus, isFirstOnScreen, isHorizontal, onPress])
+  }, [films, handleItemFocus, isFirstOnScreen, onPress])
 }

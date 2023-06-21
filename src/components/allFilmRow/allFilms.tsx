@@ -20,9 +20,6 @@ export const AllFilms: FC<Props> = ({
         scrollPosition={scrollPosition}
         key={1}
         items={films}
-        initialNumToRender={7}
-        maxToRenderPerBatch={7}
-        windowSize={2}
       />
     </FocusHolder>
   )

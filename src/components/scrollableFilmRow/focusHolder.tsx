@@ -1,8 +1,6 @@
 import React, {FC, useState} from 'react'
 import {TVFocusGuideView} from 'react-native'
-import {BaseView} from 'theme'
 
-//functional component with props
 type Props = {
   children: React.ReactNode
   isFirstOnScreen: boolean
