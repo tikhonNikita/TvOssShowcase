@@ -1,7 +1,7 @@
 import React, {useRef} from 'react'
 import styled from 'styled-components/native'
 import {BaseView} from 'theme'
-import {useFocusEffect} from '@react-navigation/native'
+import {useFocusEffect, useNavigation} from '@react-navigation/native'
 
 type Props = {
   onFocus: () => void
@@ -12,14 +12,18 @@ type Props = {
 
 const _SeeMoreCard: React.FC<Props> = ({onPress, onFocus, onBlur, focused}) => {
   const ref = useRef<any>()
+  const wasFocusedRef = useRef<boolean>(false)
+  const subscriptionRef = useRef<() => void>()
+  const navigation = useNavigation()
 
   useFocusEffect(() => {
     let timeout: number | null = null
-    if (focused) {
-      timeout = setTimeout(
-        () => ref.current.setNativeProps({hasTVPreferredFocus: true}),
-        5,
-      )
+    if (wasFocusedRef.current) {
+      timeout = setTimeout(() => {
+        ref.current.setNativeProps({hasTVPreferredFocus: true})
+        wasFocusedRef.current = false
+        subscriptionRef.current?.()
+      }, 5)
     }
     return () => {
       if (timeout) {
@@ -28,10 +32,17 @@ const _SeeMoreCard: React.FC<Props> = ({onPress, onFocus, onBlur, focused}) => {
     }
   })
 
+  const handlePress = () => {
+    subscriptionRef.current = navigation.addListener('blur', () => {
+      wasFocusedRef.current = true
+    })
+    onPress()
+  }
+
   return (
     <CardContainer
       ref={ref}
-      onPress={() => onPress()}
+      onPress={handlePress}
       onFocus={onFocus}
       onBlur={onBlur}
       focused={focused}>

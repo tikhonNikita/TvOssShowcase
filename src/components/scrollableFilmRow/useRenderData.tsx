@@ -14,6 +14,7 @@ export type RenderItem = {
 }
 
 type RawData = {
+  isHorizontal: boolean
   films: Film[]
   onItemFocus: (index: number) => void
   isFirstOnScreen: boolean
@@ -26,6 +27,7 @@ export const useRenderData = ({
   onItemFocus,
   setTrapLeft,
   isFirstOnScreen,
+  isHorizontal,
 }: RawData): RenderItem[] => {
   const handleItemFocus = useCallback(
     (index: number) => {
@@ -42,12 +44,13 @@ export const useRenderData = ({
   const navigation = useNavigation<HomeScreenNavProp>()
 
   const onPress = useCallback(() => {
-    navigation.navigate('Details')
+    navigation.navigate('List')
   }, [navigation])
 
   return useMemo(() => {
     return films.map((film, index) => {
-      const type = index === films.length - 1 ? 'seeMore' : 'film'
+      const type =
+        index === films.length - 1 && isHorizontal ? 'seeMore' : 'film'
       return {
         type,
         onPress: type === 'seeMore' ? onPress : () => {},

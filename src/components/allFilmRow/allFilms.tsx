@@ -11,7 +11,13 @@ type Props = {
 export const AllFilms: FC<Props> = ({films, isFirstOnScreen = false}) => {
   return (
     <FocusHolder isFirstOnScreen={isFirstOnScreen}>
-      <ScrollableFilmRow key={1} items={films} />
+      <ScrollableFilmRow
+        key={1}
+        items={films}
+        initialNumToRender={7}
+        maxToRenderPerBatch={7}
+        windowSize={2}
+      />
     </FocusHolder>
   )
 }

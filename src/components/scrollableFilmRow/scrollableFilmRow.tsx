@@ -6,13 +6,14 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated'
-import {FlatList, ListRenderItem} from 'react-native'
+import {FlatList, ListRenderItem, StyleProp, ViewStyle} from 'react-native'
 import {Film} from '../../items'
 import {RenderItem, useRenderData} from './useRenderData'
 import {FocusManagementContext} from './focusHolder'
 import {FilmCardContainer} from '../filmCard/filmCardContainer'
 
 const CARD_SIZE = 200
+const CARD_HEIGHT = 300
 
 const getItemLayout: FlatList['props']['getItemLayout'] = (
   _: unknown,
@@ -37,8 +38,25 @@ const renderItem: ListRenderItem<RenderItem> = ({item}) => {
 const keyExtractor = (item: RenderItem, index: number) =>
   `${item.title}-${index}`
 
-type Props = {items: Film[]}
-export const ScrollableFilmRow: FC<Props> = ({items}) => {
+type Props = {
+  items: Film[]
+  horizontal?: boolean
+  numColumns?: number
+  initialNumToRender?: number
+  maxToRenderPerBatch?: number
+  windowSize?: number
+  contentContainerStyle?: StyleProp<ViewStyle>
+}
+
+export const ScrollableFilmRow: FC<Props> = ({
+  items,
+  horizontal = true,
+  numColumns,
+  initialNumToRender,
+  maxToRenderPerBatch,
+  windowSize,
+  contentContainerStyle,
+}) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
   const aref = useAnimatedRef<any>()
@@ -46,7 +64,11 @@ export const ScrollableFilmRow: FC<Props> = ({items}) => {
   useAnimatedReaction(
     () => scroll.value,
     value => {
-      scrollTo(aref, value, 0, true)
+      if (horizontal) {
+        scrollTo(aref, value, 0, true)
+      } else {
+        scrollTo(aref, 0, value, true)
+      }
     },
   )
 
@@ -67,25 +89,46 @@ export const ScrollableFilmRow: FC<Props> = ({items}) => {
     [prevIndex, scroll],
   )
 
+  const onGridItemFocus = useCallback(
+    (index: number) => {
+      if (!numColumns) {
+        throw 'numColumns is not defined'
+      }
+      const rowNum = Math.floor(index / numColumns)
+      const firstInRow = rowNum * numColumns
+      const finalIndex = firstInRow + 1
+      scroll.value = withTiming((finalIndex / numColumns - 0.9) * CARD_HEIGHT, {
+        duration: 200,
+      })
+
+      prevIndex.value = finalIndex
+    },
+    [numColumns, prevIndex, scroll],
+  )
+
   const {isFirstOnScreen, setTrapLeft} = useContext(FocusManagementContext)
 
   const data = useRenderData({
     films: items,
-    onItemFocus,
+    onItemFocus: horizontal ? onItemFocus : onGridItemFocus,
     isFirstOnScreen,
     setTrapLeft,
+    isHorizontal: horizontal,
   })
 
   return (
     <Animated.FlatList
+      numColumns={numColumns}
       showsHorizontalScrollIndicator={false}
-      initialNumToRender={7}
-      maxToRenderPerBatch={7}
-      windowSize={2}
+      showsVerticalScrollIndicator={false}
+      initialNumToRender={initialNumToRender}
+      maxToRenderPerBatch={maxToRenderPerBatch}
+      windowSize={windowSize}
       ref={aref}
+      contentContainerStyle={contentContainerStyle}
       renderItem={renderItem}
       data={data}
-      horizontal
+      horizontal={horizontal}
       scrollEnabled={false}
       getItemLayout={getItemLayout}
       keyExtractor={keyExtractor}
