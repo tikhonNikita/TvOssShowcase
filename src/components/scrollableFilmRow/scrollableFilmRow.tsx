@@ -44,7 +44,7 @@ type Props = {
 export const ScrollableFilmRow: FC<Props> = ({items, scrollPosition = 0}) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
-  const aref = useAnimatedRef<any>()
+  const aref = useAnimatedRef<Animated.FlatList<RenderItem>>()
 
   useAnimatedReaction(
     () => scroll.value,

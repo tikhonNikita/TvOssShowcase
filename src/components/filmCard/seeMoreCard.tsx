@@ -2,6 +2,7 @@ import React, {useRef} from 'react'
 import styled from 'styled-components/native'
 import {BaseView} from 'theme'
 import {useFocusEffect, useNavigation} from '@react-navigation/native'
+import {View} from 'react-native'
 
 type Props = {
   onFocus: () => void
@@ -11,16 +12,17 @@ type Props = {
 }
 
 const _SeeMoreCard: React.FC<Props> = ({onPress, onFocus, onBlur, focused}) => {
-  const ref = useRef<any>()
+  const ref = useRef<View>(null)
   const wasFocusedRef = useRef<boolean>(false)
   const subscriptionRef = useRef<() => void>()
   const navigation = useNavigation()
 
   useFocusEffect(() => {
     let timeout: number | null = null
+    // workaround to save focus after navigation from previous screen as current FocusHolder doesn't support it
     if (wasFocusedRef.current) {
       timeout = setTimeout(() => {
-        ref.current.setNativeProps({hasTVPreferredFocus: true})
+        ref?.current?.setNativeProps({hasTVPreferredFocus: true})
         wasFocusedRef.current = false
         subscriptionRef.current?.()
       }, 5)

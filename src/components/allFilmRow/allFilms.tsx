@@ -16,11 +16,7 @@ export const AllFilms: FC<Props> = ({
 }) => {
   return (
     <FocusHolder isFirstOnScreen={isFirstOnScreen}>
-      <ScrollableFilmRow
-        scrollPosition={scrollPosition}
-        key={1}
-        items={films}
-      />
+      <ScrollableFilmRow scrollPosition={scrollPosition} items={films} />
     </FocusHolder>
   )
 }

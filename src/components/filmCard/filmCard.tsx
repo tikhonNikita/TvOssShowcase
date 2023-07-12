@@ -27,8 +27,7 @@ const _FilmCard: FC<Props> = ({
       hasTVPreferredFocus={requireFocus}
       focused={focused}>
       <ContentContainer>
-        <FastImage
-          style={{width: 192, height: 200}}
+        <Image
           source={{
             uri: uri,
             priority: FastImage.priority.normal,
@@ -63,4 +62,9 @@ const Title = styled.Text({
 
 const ContentContainer = styled(BaseView)({
   backgroundColor: 'lightgrey',
+})
+
+const Image = styled(FastImage)({
+  width: 192,
+  height: 200,
 })

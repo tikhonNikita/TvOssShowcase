@@ -49,7 +49,7 @@ type Props = {
 export const AllFilmsScrollGrid: FC<Props> = ({items, numColumns}) => {
   const scroll = useSharedValue(0)
   const prevIndex = useSharedValue(0)
-  const aref = useAnimatedRef<any>()
+  const aref = useAnimatedRef<Animated.FlatList<RenderItem>>()
 
   useAnimatedReaction(
     () => scroll.value,
